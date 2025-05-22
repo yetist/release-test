@@ -173,7 +173,7 @@ def release_version():
     # release version
     if os.path.isfile(f"_build/meson-dist/{repo_name}-{new_version}.tar.xz"):
         # meson dist
-        cmdline = f"gh release create {new_tag} --title {title} -F .release.note.txt _build/meson-dist/*"
+        cmdline = f'gh release create {new_tag} --title "{title}" -F .release.note.txt _build/meson-dist/*'
         x = subprocess.run(shlex.split(cmdline))
         if x.returncode != 0:
             sys.exit(1)
@@ -189,7 +189,9 @@ def release_version():
         if not os.path.exists(f"{tarfile}.sha256sum"):
             sha256sum(tarfile)
 
-        cmdline = f"gh release create {new_tag} --title {title} -F .release.note.txt {repo_name}-*.tar.xz*"
+        print(tarfile)
+        cmdline = f'gh release create {new_tag} --title "{title}" -F .release.note.txt {repo_name}-*.tar.xz*'
+        print(shlex.split(cmdline))
         x = subprocess.run(shlex.split(cmdline))
         if x.returncode != 0:
             sys.exit(1)
