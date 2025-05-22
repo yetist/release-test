@@ -192,7 +192,6 @@ def main():
         if not os.path.exists(f"{tarfile}.sha256sum"):
             sha256sum(tarfile)
 
-        print(tarfile)
         cmdline = f'gh release create {new_tag} --title "{title}" -F .release.note.txt {repo_name}-*.tar.xz*'
         print(shlex.split(cmdline))
         x = subprocess.run(shlex.split(cmdline))
