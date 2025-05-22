@@ -28,7 +28,7 @@ jobs:
       - name: Install GH CLI
         uses: dev-hanz-ops/install-gh-cli-action@v0.2.1
         with:
-          gh-cli-version: 2.39.1
+          gh-cli-version: 2.72.0
 
       - name: Create github release
         run: |
