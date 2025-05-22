@@ -137,7 +137,7 @@ def notify_server(repo: str, version: str, body: str, flist: list[str]):
         sys.exit(1)
 
 
-def release_version():
+def main():
     old_tag = subprocess.getoutput(
         "gh release ls -L 1 --json tagName --jq '.[0].tagName'"
     ).strip()
@@ -145,6 +145,9 @@ def release_version():
     new_tag = os.getenv("GITHUB_REF_NAME", "")
     if len(new_tag.strip()) == 0:
         print("no tag")
+        sys.exit(1)
+    if old_tag == new_tag:
+        print(f"{new_tag} already releaed")
         sys.exit(1)
     new_version = new_tag[1:]
 
@@ -204,4 +207,4 @@ def release_version():
 
 
 if __name__ == "__main__":
-    release_version()
+    main()
