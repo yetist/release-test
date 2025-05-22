@@ -18,12 +18,12 @@ jobs:
         with:
           submodules: "true"
 
-      - name: Install dependency packages
-        run: sudo .github/workflows/ubuntu.sh
+      #      - name: Install dependency packages
+      #        run: sudo .github/workflows/ubuntu.sh
 
-      - name: Build the source code
-        run: |
-          .github/workflows/builds.sh
+      #      - name: Build the source code
+      #        run: |
+      #          .github/workflows/builds.sh
 
       - name: Install GH CLI
         uses: dev-hanz-ops/install-gh-cli-action@v0.2.1
