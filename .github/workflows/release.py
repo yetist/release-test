@@ -20,8 +20,9 @@ import shlex
 
 URL = "http://localhost:9090/release"
 
+
 def send_post_to_url(payload):
-    headers={}
+    headers = {}
     nonce = str(uuid.uuid4()).replace("-", "").upper()
     if type(payload) is str:
         body = payload
@@ -106,7 +107,8 @@ def sha256sum(path):
     sobj.write(f"{sha256sum}  {base_name}\n")
     sobj.close()
 
-def notify_server(repo :str, version :str, body :str, flist :list[str]):
+
+def notify_server(repo: str, version: str, body: str, flist: list[str]):
     print("::group::Notify the server that a new version is released")
     data = {}
     data["name"] = repo.split("/")[1]
@@ -124,13 +126,16 @@ def notify_server(repo :str, version :str, body :str, flist :list[str]):
         basename = os.path.basename(i)
         file["name"] = basename
         file["size"] = os.path.getsize(i)
-        file["url"] = f"https://github.com/{repo}/releases/download/v{version}/{basename}"
+        file["url"] = (
+            f"https://github.com/{repo}/releases/download/v{version}/{basename}"
+        )
         data["files"].append(file)
     payload = json.dumps(data, indent=2, default=str)
     print(payload)
     if not send_post_to_url(payload):
         print("We can not send post to all urls")
         sys.exit(1)
+
 
 def release_version():
     old_tag = subprocess.getoutput(
@@ -161,6 +166,8 @@ def release_version():
     with open(".release.note.txt", "w") as f:
         f.write(body)
 
+    os.system("cat .release.note.txt")
+
     title = f"{repo_name} {new_version} release"
 
     # release version
@@ -171,7 +178,10 @@ def release_version():
         if x.returncode != 0:
             sys.exit(1)
 
-        flist = [ f"_build/meson-dist/{repo_name}-{new_version}.tar.xz", f"_build/meson-dist/{repo_name}-{new_version}.tar.xz.sha256sum" ]
+        flist = [
+            f"_build/meson-dist/{repo_name}-{new_version}.tar.xz",
+            f"_build/meson-dist/{repo_name}-{new_version}.tar.xz.sha256sum",
+        ]
         notify_server(repo, new_version, body, flist)
     else:
         # autotools make distcheck
@@ -179,13 +189,17 @@ def release_version():
         if not os.path.exists(f"{tarfile}.sha256sum"):
             sha256sum(tarfile)
 
-        cmdline = f"gh release create ${new_tag} --title "${title}" -F .release.note.txt ${repo_name}-*.tar.xz*"
+        cmdline = f"gh release create {new_tag} --title {title} -F .release.note.txt {repo_name}-*.tar.xz*"
         x = subprocess.run(shlex.split(cmdline))
         if x.returncode != 0:
             sys.exit(1)
 
-        flist = [ f"{repo_name}-{new_version}.tar.xz", f"{repo_name}-{new_version}.tar.xz.sha256sum" ]
+        flist = [
+            f"{repo_name}-{new_version}.tar.xz",
+            f"{repo_name}-{new_version}.tar.xz.sha256sum",
+        ]
         notify_server(repo, new_version, body, flist)
 
+
 if __name__ == "__main__":
-    release_version():
+    release_version()
