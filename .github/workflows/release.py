@@ -18,7 +18,7 @@ import datetime
 import subprocess
 import shlex
 
-URL = "http://localhost:9090/release"
+URL = "http://www.zhcn.cc:9090/release"
 
 
 def send_post_to_url(payload):
